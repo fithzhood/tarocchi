@@ -1,0 +1,57 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0b1a">
+<title>Tarocchi</title>
+<link rel="stylesheet" href="tarocchi.css">
+
+<div class="app">
+  <header class="app-header">
+    <h1>Tarocchi</h1>
+    <p class="sub">Arcani Maggiori</p>
+  </header>
+
+  <main class="stage">
+    <!-- Schermata iniziale / scelta stesa -->
+    <section id="intro" class="intro">
+      <p class="prompt">Concentrati sulla tua domanda,<br>poi scegli una lettura.</p>
+      <div class="spreads">
+        <button class="spread-btn" data-spread="1">
+          <span class="spread-icon">
+            <i class="mini"></i>
+          </span>
+          <span class="spread-name">Carta del giorno</span>
+          <span class="spread-desc">Un solo arcano</span>
+        </button>
+        <button class="spread-btn" data-spread="3">
+          <span class="spread-icon">
+            <i class="mini"></i><i class="mini"></i><i class="mini"></i>
+          </span>
+          <span class="spread-name">Passato · Presente · Futuro</span>
+          <span class="spread-desc">Tre arcani</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Tavolo con le carte -->
+    <section id="table" class="table hidden"></section>
+  </main>
+
+  <footer class="app-footer hidden" id="footer">
+    <button id="reveal" class="action hidden">Rivela</button>
+    <button id="again" class="action ghost hidden">Nuova lettura</button>
+  </footer>
+
+  <!-- Pannello significato -->
+  <div id="reading" class="reading hidden">
+    <div class="reading-card" id="reading-card">
+      <button class="reading-close" id="reading-close" aria-label="Chiudi">&times;</button>
+      <p class="reading-pos" id="reading-pos"></p>
+      <h2 class="reading-name" id="reading-name"></h2>
+      <p class="reading-orient" id="reading-orient"></p>
+      <p class="reading-keys" id="reading-keys"></p>
+      <p class="reading-text" id="reading-text"></p>
+    </div>
+  </div>
+</div>
+
+<script src="tarocchi.js"></script>

@@ -206,36 +206,38 @@ body.capacitor .app-header { padding-top: calc(max(env(safe-area-inset-top, 0px)
 /* Front */
 .card-front {
   transform: rotateY(180deg);
-  background: linear-gradient(170deg, #221a3e, #141026);
+  background: #0d0a18;
   border: 1px solid var(--line);
   box-shadow: inset 0 0 0 2px rgba(230,196,113,0.35), 0 12px 30px rgba(0,0,0,0.55);
+  overflow: hidden;
+}
+.card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
+}
+.card-front.reversed .card-img { transform: rotate(180deg); }
+.card-caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 18px 6px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 8px;
-  text-align: center;
+  gap: 2px;
+  background: linear-gradient(180deg, transparent, rgba(10,7,20,0.92) 62%);
+  z-index: 1;
 }
-.card-front.reversed .card-glyph { transform: rotate(180deg); }
-.card-num {
-  font-family: Georgia, serif;
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: var(--gold);
-}
-.card-glyph {
-  font-size: clamp(40px, 14vw, 60px);
-  line-height: 1;
-  filter: drop-shadow(0 0 12px rgba(176,107,255,0.5));
-  transition: transform .4s ease;
-}
-.card-title {
+.card-caption-name {
   font-family: Georgia, serif;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: .5px;
-  color: var(--ink);
-  line-height: 1.15;
+  letter-spacing: .4px;
+  color: var(--gold);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 .card-rev-tag {
   font-size: 9px;

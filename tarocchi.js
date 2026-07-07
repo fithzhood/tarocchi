@@ -42,7 +42,7 @@ const ARCANA = [
       t: "Con volontà e concentrazione superi gli ostacoli. Tieni salde le redini delle tue forze opposte e avanzerai verso il successo." },
     rev: { k: "Perdita di rotta · Ostacoli · Aggressività",
       t: "Le forze in gioco tirano in direzioni diverse e rischi di deragliare. Ritrova la direzione prima di premere sull'acceleratore." } },
-  { n: "VIII", name: "La Giustizia", g: "⚖️",
+  { n: "XI", name: "La Giustizia", g: "⚖️",
     up: { k: "Equità · Verità · Responsabilità",
       t: "Ogni azione ha una conseguenza: è il momento di scelte oneste e decisioni equilibrate. La verità e la coerenza ti guidano." },
     rev: { k: "Ingiustizia · Disonestà · Non assumersi le colpe",
@@ -57,7 +57,7 @@ const ARCANA = [
       t: "La ruota gira e porta un cambiamento: cogli l'onda favorevole. Ciò che sembra caso fa parte di un ciclo più grande." },
     rev: { k: "Sfortuna · Resistenza · Ciclo negativo",
       t: "Un momento in discesa o un blocco. Non lottare contro la corrente: ogni ruota torna a salire, abbi pazienza." } },
-  { n: "XI", name: "La Forza", g: "🦁",
+  { n: "VIII", name: "La Forza", g: "🦁",
     up: { k: "Coraggio · Dolcezza · Padronanza",
       t: "La vera forza è gentile. Domi le tue paure e i tuoi istinti non con la violenza ma con pazienza e coraggio interiore." },
     rev: { k: "Insicurezza · Dubbio · Impulsività",
@@ -118,6 +118,11 @@ const POSITIONS = {
   1: ["La tua carta"],
   3: ["Passato", "Presente", "Futuro"],
 };
+
+/* Mappa indice-arcano → file immagine Rider-Waite (cards/NN.jpg).
+   Nel RWS la Forza è VIII e la Giustizia XI: nell'array la Giustizia è
+   all'indice 8 (immagine 11) e la Forza all'indice 11 (immagine 08). */
+const IMG = ["00","01","02","03","04","05","06","07","11","09","10","08","12","13","14","15","16","17","18","19","20","21"];
 
 /* ---- Stato ---- */
 const state = { spread: 0, cards: [], revealed: false };
@@ -180,7 +185,7 @@ function buildTable(spread) {
 function cardMarkup(c) {
   const a = ARCANA[c.idx];
   const revClass = c.reversed ? " reversed" : "";
-  const revTag = c.reversed ? '<div class="card-rev-tag">Rovesciata</div>' : '<div class="card-rev-tag">&nbsp;</div>';
+  const revTag = c.reversed ? '<span class="card-rev-tag">Rovesciata</span>' : "";
   return `
     <div class="card-inner">
       <div class="card-face card-back">
@@ -188,12 +193,8 @@ function cardMarkup(c) {
         <span class="star" style="bottom:16%;right:18%;font-size:14px">✧</span>
       </div>
       <div class="card-face card-front${revClass}">
-        <div class="card-num">${a.n}</div>
-        <div class="card-glyph">${a.g}</div>
-        <div>
-          <div class="card-title">${a.name}</div>
-          ${revTag}
-        </div>
+        <img class="card-img" src="cards/${IMG[c.idx]}.jpg" alt="${a.name}" loading="lazy">
+        <div class="card-caption"><span class="card-caption-name">${a.name}</span>${revTag}</div>
       </div>
     </div>`;
 }

@@ -125,6 +125,7 @@ const DECKS = [
   { id: "rws",       name: "Rider-Waite",  desc: "Il classico illustrato, 1909" },
   { id: "marseille", name: "Marsigliese",  desc: "Xilografia d'epoca, ~1700" },
   { id: "onirico",   name: "Onirico",      desc: "Arte digitale, senza bordi" },
+  { id: "jojo",      name: "Lucky Land",    desc: "Stile fumetto di H. Araki" },
 ];
 const DEFAULT_DECK = "rws";
 

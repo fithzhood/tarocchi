@@ -6,6 +6,7 @@
 
 <div class="app">
   <header class="app-header">
+    <button id="opts-open" class="opts-btn" aria-label="Opzioni">&#9881;</button>
     <h1>Tarocchi</h1>
     <p class="sub">Arcani Maggiori</p>
   </header>
@@ -40,6 +41,16 @@
     <button id="reveal" class="action hidden">Rivela</button>
     <button id="again" class="action ghost hidden">Nuova lettura</button>
   </footer>
+
+  <!-- Pannello opzioni -->
+  <div id="options" class="reading hidden">
+    <div class="reading-card">
+      <button class="reading-close" id="opts-close" aria-label="Chiudi">&times;</button>
+      <p class="reading-pos">Opzioni</p>
+      <h2 class="reading-name">Tema delle carte</h2>
+      <div class="deck-list" id="deck-list"></div>
+    </div>
+  </div>
 
   <!-- Pannello significato -->
   <div id="reading" class="reading hidden">

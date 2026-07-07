@@ -42,10 +42,27 @@ body {
 
 /* Header */
 .app-header {
+  position: relative;
   text-align: center;
   padding: 18px 0 6px;
   flex: 0 0 auto;
 }
+.opts-btn {
+  position: absolute;
+  top: 14px; right: 4px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(124,92,255,0.08);
+  color: var(--gold);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+.opts-btn:hover { background: rgba(124,92,255,0.16); }
+.opts-btn:active { transform: rotate(45deg); }
+body.capacitor .opts-btn { top: calc(max(env(safe-area-inset-top, 0px), 24px) + 12px); }
 .app-header h1 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
@@ -151,13 +168,17 @@ body.capacitor .app-header { padding-top: calc(max(env(safe-area-inset-top, 0px)
 /* Card + flip */
 .card {
   width: var(--cw, 150px);
-  aspect-ratio: 5 / 8.4;
+  aspect-ratio: var(--card-ar, 0.6);
   perspective: 900px;
   cursor: pointer;
   border: none;
   background: none;
   padding: 0;
 }
+/* Rapporto immagine per mazzo, così il disegno si vede intero senza tagli */
+body[data-deck="rws"]       { --card-ar: 0.603; }
+body[data-deck="marseille"] { --card-ar: 0.521; }
+body[data-deck="onirico"]   { --card-ar: 0.667; }
 .card-inner {
   position: relative;
   width: 100%;
@@ -220,26 +241,26 @@ body.capacitor .app-header { padding-top: calc(max(env(safe-area-inset-top, 0px)
   transition: transform .5s ease;
 }
 .card-front.reversed .card-img { transform: rotate(180deg); }
-.card-caption {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  padding: 18px 6px 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  background: linear-gradient(180deg, transparent, rgba(10,7,20,0.92) 62%);
-  z-index: 1;
+
+/* Nome sotto la carta (compare allo scoprimento) */
+.card-name {
+  min-height: 16px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .35s ease, transform .35s ease;
+  line-height: 1.2;
 }
-.card-caption-name {
+.card-name.show { opacity: 1; transform: none; }
+.card-name-txt {
   font-family: Georgia, serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: .4px;
+  letter-spacing: .3px;
   color: var(--gold);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 .card-rev-tag {
+  display: inline-block;
   font-size: 9px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -343,6 +364,51 @@ body.capacitor .app-header { padding-top: calc(max(env(safe-area-inset-top, 0px)
   line-height: 1.65;
   color: var(--muted);
 }
+
+/* Lista temi nelle opzioni */
+.deck-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+.deck-opt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.02);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .2s ease, background .2s ease;
+}
+.deck-opt:active { transform: scale(0.99); }
+.deck-opt.active {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(230,196,113,0.12), rgba(124,92,255,0.06));
+}
+.deck-thumb {
+  width: 44px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(230,196,113,0.3);
+  flex: 0 0 auto;
+  background: #0d0a18;
+}
+.deck-meta { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; }
+.deck-name { font-size: 16px; font-weight: 600; color: var(--ink); }
+.deck-desc { font-size: 12px; color: var(--muted); }
+.deck-check {
+  color: var(--gold);
+  font-size: 18px;
+  opacity: 0;
+  flex: 0 0 auto;
+}
+.deck-opt.active .deck-check { opacity: 1; }
 
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }

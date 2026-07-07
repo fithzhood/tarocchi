@@ -119,10 +119,29 @@ const POSITIONS = {
   3: ["Passato", "Presente", "Futuro"],
 };
 
-/* Mappa indice-arcano → file immagine Rider-Waite (cards/NN.jpg).
-   Nel RWS la Forza è VIII e la Giustizia XI: nell'array la Giustizia è
-   all'indice 8 (immagine 11) e la Forza all'indice 11 (immagine 08). */
-const IMG = ["00","01","02","03","04","05","06","07","11","09","10","08","12","13","14","15","16","17","18","19","20","21"];
+/* Mazzi disponibili. Le immagini sono già salvate per indice-arcano
+   (cards/<id>/00.jpg … 21.jpg), quindi il percorso è diretto. */
+const DECKS = [
+  { id: "rws",       name: "Rider-Waite",  desc: "Il classico illustrato, 1909" },
+  { id: "marseille", name: "Marsigliese",  desc: "Xilografia d'epoca, ~1700" },
+  { id: "onirico",   name: "Onirico",      desc: "Arte digitale, senza bordi" },
+];
+const DEFAULT_DECK = "rws";
+
+function getDeck() {
+  const saved = localStorage.getItem("tarocchi.deck");
+  return DECKS.some((d) => d.id === saved) ? saved : DEFAULT_DECK;
+}
+function setDeck(id) {
+  localStorage.setItem("tarocchi.deck", id);
+  applyDeckClass();
+}
+function applyDeckClass() {
+  document.body.dataset.deck = getDeck();
+}
+function cardSrc(idx) {
+  return `cards/${getDeck()}/${String(idx).padStart(2, "0")}.jpg`;
+}
 
 /* ---- Stato ---- */
 const state = { spread: 0, cards: [], revealed: false };
@@ -172,6 +191,11 @@ function buildTable(spread) {
     card.addEventListener("click", () => onCardClick(i, card));
     slot.appendChild(card);
 
+    const name = document.createElement("div");
+    name.className = "card-name";
+    name.innerHTML = "&nbsp;";
+    slot.appendChild(name);
+
     table.appendChild(slot);
   });
 
@@ -185,7 +209,6 @@ function buildTable(spread) {
 function cardMarkup(c) {
   const a = ARCANA[c.idx];
   const revClass = c.reversed ? " reversed" : "";
-  const revTag = c.reversed ? '<span class="card-rev-tag">Rovesciata</span>' : "";
   return `
     <div class="card-inner">
       <div class="card-face card-back">
@@ -193,10 +216,21 @@ function cardMarkup(c) {
         <span class="star" style="bottom:16%;right:18%;font-size:14px">✧</span>
       </div>
       <div class="card-face card-front${revClass}">
-        <img class="card-img" src="cards/${IMG[c.idx]}.jpg" alt="${a.name}" loading="lazy">
-        <div class="card-caption"><span class="card-caption-name">${a.name}</span>${revTag}</div>
+        <img class="card-img" src="${cardSrc(c.idx)}" alt="${a.name}" loading="lazy">
       </div>
     </div>`;
+}
+
+/* Mostra il nome sotto la carta scoperta */
+function showName(slotIndex) {
+  const slot = table.children[slotIndex];
+  if (!slot) return;
+  const c = state.cards[slotIndex];
+  const a = ARCANA[c.idx];
+  const el = slot.querySelector(".card-name");
+  const rev = c.reversed ? ' <span class="card-rev-tag">rovesciata</span>' : "";
+  el.innerHTML = `<span class="card-name-txt">${a.name}</span>${rev}`;
+  el.classList.add("show");
 }
 
 /* ---- Interazioni ---- */
@@ -205,6 +239,7 @@ function onCardClick(i, cardEl) {
   if (!wasFlipped) {
     cardEl.classList.add("flipped");
     cardEl.setAttribute("aria-label", ARCANA[state.cards[i].idx].name);
+    setTimeout(() => showName(i), 400);
     // piccola attesa per far vedere il flip prima del pannello
     setTimeout(() => openReading(i), 480);
   } else {
@@ -218,6 +253,7 @@ function revealAll() {
     setTimeout(() => {
       el.classList.add("flipped");
       el.setAttribute("aria-label", ARCANA[state.cards[i].idx].name);
+      setTimeout(() => showName(i), 400);
     }, i * 220);
   });
   state.revealed = true;
@@ -253,6 +289,41 @@ function reset() {
   intro.classList.remove("hidden");
 }
 
+/* ---- Opzioni / temi ---- */
+const options = document.getElementById("options");
+const deckList = document.getElementById("deck-list");
+
+function renderDeckList() {
+  const cur = getDeck();
+  deckList.innerHTML = "";
+  DECKS.forEach((d) => {
+    const btn = document.createElement("button");
+    btn.className = "deck-opt" + (d.id === cur ? " active" : "");
+    btn.innerHTML =
+      `<img class="deck-thumb" src="cards/${d.id}/00.jpg" alt="">` +
+      `<span class="deck-meta"><span class="deck-name">${d.name}</span>` +
+      `<span class="deck-desc">${d.desc}</span></span>` +
+      `<span class="deck-check">✓</span>`;
+    btn.addEventListener("click", () => {
+      setDeck(d.id);
+      renderDeckList();
+      applyDeckToTable();
+    });
+    deckList.appendChild(btn);
+  });
+}
+
+/* Aggiorna al volo le immagini delle carte già in tavola */
+function applyDeckToTable() {
+  const imgs = table.querySelectorAll(".card-img");
+  imgs.forEach((img, i) => {
+    if (state.cards[i]) img.src = cardSrc(state.cards[i].idx);
+  });
+}
+
+function openOptions() { renderDeckList(); options.classList.remove("hidden"); }
+function closeOptions() { options.classList.add("hidden"); }
+
 /* ---- Listener ---- */
 document.querySelectorAll(".spread-btn").forEach((btn) => {
   btn.addEventListener("click", () => buildTable(Number(btn.dataset.spread)));
@@ -261,9 +332,14 @@ revealBtn.addEventListener("click", revealAll);
 againBtn.addEventListener("click", reset);
 document.getElementById("reading-close").addEventListener("click", closeReading);
 reading.addEventListener("click", (e) => { if (e.target === reading) closeReading(); });
+document.getElementById("opts-open").addEventListener("click", openOptions);
+document.getElementById("opts-close").addEventListener("click", closeOptions);
+options.addEventListener("click", (e) => { if (e.target === options) closeOptions(); });
 
 /* ---- Native (Capacitor) ---- */
 function isCapacitorNative() {
   return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 }
 if (isCapacitorNative()) document.body.classList.add("capacitor");
+
+applyDeckClass();

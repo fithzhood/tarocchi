@@ -140,7 +140,7 @@ function setDeck(id) {
 function applyDeckClass() {
   document.body.dataset.deck = getDeck();
 }
-const ASSET_VER = "6"; // bump quando cambiano le immagini delle carte (anti-cache)
+const ASSET_VER = "7"; // bump quando cambiano le immagini delle carte (anti-cache)
 function cardSrc(idx) {
   return `cards/${getDeck()}/${String(idx).padStart(2, "0")}.jpg?v=${ASSET_VER}`;
 }

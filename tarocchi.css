@@ -179,7 +179,7 @@ body.capacitor .app-header { padding-top: calc(max(env(safe-area-inset-top, 0px)
 body[data-deck="rws"]       { --card-ar: 0.603; }
 body[data-deck="marseille"] { --card-ar: 0.521; }
 body[data-deck="onirico"]   { --card-ar: 0.667; }
-body[data-deck="jojo"]      { --card-ar: 0.608; }
+body[data-deck="jojo"]      { --card-ar: 0.605; }
 .card-inner {
   position: relative;
   width: 100%;

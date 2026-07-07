@@ -140,8 +140,9 @@ function setDeck(id) {
 function applyDeckClass() {
   document.body.dataset.deck = getDeck();
 }
+const ASSET_VER = "6"; // bump quando cambiano le immagini delle carte (anti-cache)
 function cardSrc(idx) {
-  return `cards/${getDeck()}/${String(idx).padStart(2, "0")}.jpg`;
+  return `cards/${getDeck()}/${String(idx).padStart(2, "0")}.jpg?v=${ASSET_VER}`;
 }
 
 /* ---- Stato ---- */
@@ -301,7 +302,7 @@ function renderDeckList() {
     const btn = document.createElement("button");
     btn.className = "deck-opt" + (d.id === cur ? " active" : "");
     btn.innerHTML =
-      `<img class="deck-thumb" src="cards/${d.id}/00.jpg" alt="">` +
+      `<img class="deck-thumb" src="cards/${d.id}/00.jpg?v=${ASSET_VER}" alt="">` +
       `<span class="deck-meta"><span class="deck-name">${d.name}</span>` +
       `<span class="deck-desc">${d.desc}</span></span>` +
       `<span class="deck-check">✓</span>`;
